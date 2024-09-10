@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="pragma" content="no-cache; charset=utf-8" />
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>sercat</title>
+<style type="text/css">
+
+body {background-color:#FFFFDD}
+
+//td {vertical-align:top;padding:0px;margin:0px}
+p {text-align:justify;margin-bottom:0px}
+td.gchord {font-size:75%;font-weight:bold;padding:0px;margin:0px;padding-top:0px;padding-right:3px;text-align:left;font-family:verdana,arial;color:#888888;position:relative;top:3px}
+td.gtxt {text-align:left}
+.dettitle {border-bottom:1px lightgray dashed}
+.dettitle2 {border-bottom:1px lightgray dashed}
+
+h2 {margin-top:20px; background-color:xgray}
+h3 {background-color:xyellow;margin-top:30px;text-decoration:underline}
+h4 {padding-left:0px;margin-left:0px;text-decoration:underline;color:#333333}
+ul {margin-top:0px;padding-top:0px}
+.ref {color:gray}
+
+.gr {color:gray}
+.grsm {color:gray;font-size:80%}
+.err {color:red;font-weight:bold}
+
+a {text-color:blue;text-decoration:underline}
+a:HOVER {border-bottom:1px blue;color:red}
+a.index {text-decoration:none}
+a.index:HOVER {text-decoration:underline;color:red}
+
+.preFile {background-color:lightgray;padding:0.5em}
+
+td.imgthumb {vertical-align:top;padding:5px;font-size:80%}
+img.ico {width:12px;height:12px;overflow:visible;position:relative;margin-top:-5px}
+.imginc {max-width:100%;max-height:80vh}
+.imginccap {text-align:left;padding-bottom:0.5em}
+
+div.code {margin:0px;padding:0px;padding-left:30px;}
+.code {font-family:courier,fixed;color:green;}
+
+.cmd {font-family:courier,fixed;color:red;background-color:#FFEEDD;font-weight:bold;white-space:pre-wrap;padding-left:0.5em;;padding-right:0.5em;padding-top:0.5em;padding-bottom:0.5em}
+.cmd::first-line {color:darkred;}
+.cmd::before {content:'> ';}
+
+.cmdresp {font-family:courier,fixed;color:blue;background-color:#EEEEFF;white-space:pre-wrap;padding-left:0.5em;;padding-right:0.5em;}
+.cmdresp::first-line {color:darkblue;}
+.cmdresp::before {content:'  ';}
+
+.comm {font-family:courier,fixed;color:red;background-color:#FFEEDD;font-weight:bold;white-space:pre-wrap;padding-left:0.5em;;padding-right:0.5em;}
+.comm::first-line {color:darkred;}
+.comm::before {content:'> ';}
+
+.commresp {font-family:courier,fixed;color:blue;background-color:#EEEEFF;white-space:pre-wrap;padding-left:0.5em;;padding-right:0.5em;}
+.commresp::first-line {color:darkblue;}
+.commresp::before {content:'< ';}
+
+.bang {font-weight:bold;color:red}
+
+
+// unsupported by everything except apple, so far
+//@media screen and (inverted-colors: inverted) {
+//.cmd {background-color:#0000CC;color:lightblue;}
+//.cmd::first-line: {color:blue}
+//.cmdresp {background-color:#CC0000;color:lightred}
+//.cmdresp::first-line: {color:red}
+//}
+
+
+@media print{
+body {font-size:80%}
+.noprint {display:none;visibility:hidden}
+.xnopbr {page-break-inside:avoid}
+td.gchord: {color:black}
+.nopbr {}
+.preFile {background-color:white;border:1px dotted black}
+}
+</style>
+<meta property="og:title" content="sercat" />
+<meta property="og:type" content="website" />
+<meta property="og:x-url" content="http://:" />
+<meta property="og:description" content="cat for serial lines, with RTS/DTR control" />
+</head>
+<body>
+<h1>sercat</h1><hr class="noprint" /><div class="noprint"><a class="index indexlev2" href="#Problem" title="">Problem</a><br /><a class="index indexlev2" href="#Solutionapproach" title="Solution approach">Solution approach</a><br /><a class="index indexlev2" href="#Command" title="Command">Command</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev3" href="#Features" title="Command.Features">Features</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#stdin" title="Command.Features.stdin">stdin</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#stdindelay" title="Command.Features.stdin delay">stdin delay</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#controllinesandbaudrate" title="Command.Features.control lines and baudrate">control lines and baudrate</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#timestamping" title="Command.Features.timestamping">timestamping</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#limitedruntime" title="Command.Features.limited runtime">limited runtime</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#filtering" title="Command.Features.filtering">filtering</a></small><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small><a class="index indexlev4" href="#ESPbootloader" title="Command.Features.ESP bootloader">ESP bootloader</a></small><br /><a class="index indexlev2" href="#Examples" title="Examples">Examples</a><br /><a class="index indexlev2" href="#Download" title="Download">Download</a><br /><a class="index indexlev2" href="#TODO" title="TODO">TODO</a><br /></div><hr /><a name="Problem"></a><h2>Problem
+</h2>
+<p>
+Often it is necessary to cat data from serial port to another process.
+This is hindered by the&nbsp;sometimes cumbersome setting of speeds.
+With embedded platforms (Arduino, ESP8266, ...) there is a&nbsp;further problem with the&nbsp;DTR and RTS lines;
+these can be set for various purposes that interfere with the&nbsp;communication.
+</p>
+<p>
+By default, both RTS and DTR are set high as a&nbsp;hippie on shrooms on port open.
+</p>
+<p>
+In case of common ESP8266&nbsp;interfaces, high RTS sends the&nbsp;module to reset state (and holds it there), and high DTR (connected to GPIO0) at reset time sets it to programming mode.
+</p>
+<p>
+In case of Arduino, DTR pulsed high causes reset (and can be held high afterwards as the&nbsp;reset line is connected via a&nbsp;capacitor). Sometimes RTS is used too.
+</p>
+<p>
+An unsolvable-in-common-software problem is with the&nbsp;RTS line, which on linux always goes high on open() call. That would need a&nbsp;kernel patch. Some are floating around.
+</p>
+<hr /><a name="Solutionapproach"></a><h2>Solution approach
+</h2>
+<ul><li> Try to look around the&nbsp;net for some utility, try socat and others, putz with stty, fail
+</li><li> Write it in good ol' C
+</li></ul><hr /><a name="Command"></a><h2>Command
+</h2>
+<pre class="preFile">sercat (compiled Apr 20 2021, 01:15:40)
+cat for serial ports, with RTS/DTR control, for arduino, ESP modules and microcontrollers
+
+Usage: sercat &lt;/dev/ttySomething&gt; [-b speed] [-dtr] [-rts] [...]
+  -b &lt;baudrate&gt;      default 115200, 0=leave as is
+  -dtr               set DTR high (default: low)
+  -rts               set RTS high (default: low, unavoidably pulses high on port open due to linux kernel
+  -dtrp              pulse DTR high on start, for 500 ms
+  -rtsp              pulse RTS high on start, for 500 ms
+  -pt &lt;n&gt;            pulse time in ms (default: 1000)
+  -raw               no filtering of unprintable characters (default: replace with '_')
+  -hex               show unprintables as [hex], replace with '_'
+  -notty             don't set RTS/DTR and baudrate, for timestamping only
+  -nl &lt;n&gt;            exit after n input lines
+  -ns &lt;n&gt;            exit after n seconds (todo)
+  -sd &lt;n&gt;            delay sending stdin for n milliseconds
+  -sl &lt;n&gt;            delay sending stdin for n input lines
+  -t &lt;n&gt;             line timestamp format, 0..7 (4=line number, 2=line time difference, 1=line time)
+  -q                 quiet, no state changes
+  -espboot           show ESP bootloader (start at 74880 bps until ~ld line, then switch to -b baudate
+  -espboott          show ESP bootloader, with timestamps if -t is set
+
+</pre><a name="Features"></a><h3> Features
+</h3>
+<a name="stdin"></a><h4> stdin
+</h4>
+<p>
+Unline ordinary <span class="code">cat</span>, data can be fed to the&nbsp;port from stdin, whether manually or via a&nbsp;pipe.
+Sercat can act as a&nbsp;rudimentary terminal.
+</p>
+<a name="stdindelay"></a><h4> stdin delay
+</h4>
+<p>
+Delays the&nbsp;start of feeding of stdin data to the&nbsp;port, by number of seconds or output lines
+<ul><li> <span class="code">-sd &lt;n&gt;</span> - send after delay of n milliseconds
+</li><li> <span class="code">-sn &lt;n&gt;</span> - send after port sends n lines of text
+</li></ul>Shows sent characters as {char} on stderror unless <span class="code">-q</span>.
+</p>
+<a name="controllinesandbaudrate"></a><h4> control lines and baudrate
+</h4>
+<ul><li> <span class="code">-b &lt;n&gt;</span> - set baudrate (default 115200, use 0&nbsp;for leaving it alone)
+</li><li> <span class="code">-rts</span> - set RTS to high (default: low)
+</li><li> <span class="code">-dtr</span> - set DTR to high (default: low)
+</li><li> <span class="code">-rtsp</span> - on port open, hold RTS to high for the&nbsp;reset interval, then set low (opposite for <span class="code">-rts</span>)
+</li><li> <span class="code">-dtrp</span> - on port open, hold DTR to high for the&nbsp;reset interval, then set low (opposite for <span class="code">-dtr</span>)
+</li><li> <span class="code">-pt &lt;n&gt;</span> - set reset interval (pulse time) to n milliseconds
+</li><li> <span class="code">-notty</span> - no attempt to set speed or lines, no serial IOCTLs at all
+</li></ul><a name="timestamping"></a><h4> timestamping
+</h4>
+<p>
+Prepends line number, line delay, and/or line time to the&nbsp;output
+<ul><li> <span class="code">-ts &lt;n&gt;</span> - takes a&nbsp;number between 0-7, where bit flags enable/disable line numbering:
+</li><ul><li> 4&nbsp;- show line number in square brackets
+</li><li> 2&nbsp;- show time difference since the&nbsp;beginning of the&nbsp;previous line
+</li><li> 1&nbsp;- show time since port opening (or fall of the&nbsp;reset pulse)
+</li><li> 7&nbsp;shows all (handy for profiling), 0&nbsp;shows none
+</li></ul></ul></p>
+<a name="limitedruntime"></a><h4> limited runtime
+</h4>
+<p>
+Sometimes the&nbsp;operation needs only couple of input lines, or should finish after preset time.
+<ul><li> <span class="code">-ns &lt;n&gt;</span> - terminate after n seconds (pulse time not included)
+</li><li> <span class="code">-nl &lt;n&gt;</span> - terminate after n input lines
+</li></ul></p>
+<a name="filtering"></a><h4> filtering
+</h4>
+<p>
+Sometimes, especially at speed mismatch (ESP8266&nbsp;power-on bootloader for example), garbage comes in. That can confuse the&nbsp;terminal.
+By default it is filtered, nonprintable characters (anything below 0x20&nbsp;that's not CR or LF, anything above 0x7F) are replaced.
+<ul><li> <span class="code">-raw</span> - no filtering, data come as-is
+</li><li> <span class="code">-nohex</span> - replace unprintables with underscore instead of "[XX]" hex code
+</li></ul></p>
+<a name="ESPbootloader"></a><h4> ESP bootloader
+</h4>
+<p>
+The ESP8266&nbsp;bootloader is starting at odd baudrate, 74880&nbsp;bps. This normally shows as garbage at usual speed of 115200.
+Switching in runtime is difficult. The bootloader usually ends with "~ld" message, which is detected and taken as the&nbsp;bootloader output end.
+<ul><li> <span class="code">-espboot</span> sets initial baudrate to 74880, then sets to 115200&nbsp;(or whatever is set by <span class="code">-b</span>) when <span class="code">~ld</span> string is detected
+</li><li> <span class="code">-espboott</span> acts as -espoot, but does not suppress timestamps and line numbers for the&nbsp;bootloader section
+</li></ul></p>
+<hr /><a name="Examples"></a><h2>Examples
+</h2>
+<p>
+Send a&nbsp;command to ESP8266&nbsp;running Tasmota, on /dev/ttyUSB1&nbsp;port, run for at most 5&nbsp;seconds, send the&nbsp;input on 10th line of output, full timestamping,
+pulsing RTS
+<div class="cmd">echo fastsensor 3|./sercat /dev/ttyUSB1&nbsp;-ns 5&nbsp;-sl 10&nbsp;-t 7&nbsp;-rtsp</div><div class="cmdresp"> *** setting DTR to LOW ***</div><div class="cmdresp"> *** setting RTS to HIGH ***</div><div class="cmdresp"> *** device speed is 115200&nbsp;bps.</div><div class="cmdresp"> *** sleeping for 1000&nbsp;msec, with RTS=1, DTR=0</div><div class="cmdresp"> *** setting DTR to LOW ***</div><div class="cmdresp"> *** setting RTS to LOW ***</div><div class="cmdresp">[1][0.018][0.018]r$_l__|__$_|_______$__c|______r_b__b__oo_lnn____#_p__#l`_{lp_n_______l______#_o_|__l____#__on__l__$ ____nn_$ ___nr___o__#_l`__r__o__#_$ __{l_____$l__$__n__</div><div class="cmdresp">[2][0.266][0.285]00:00:00.014&nbsp;UFS: FlashFS mounted with 1904&nbsp;kB free</div><div class="cmdresp">[3][0.060][0.345]00:00:00.075&nbsp;CFG: Loaded from File, Count 160</div><div class="cmdresp">[4][0.005][0.351]00:00:00.080&nbsp;QPC: Count 1</div><div class="cmdresp">[5][0.009][0.360]00:00:00.089&nbsp;Project tasmota Tasmota Version 9.3.1.2(shad)-2_7_4_9(2021-04-17T02:35:34)</div><div class="cmdresp">[6][0.537][0.897]00:00:00.627&nbsp;WIF: Connecting to AP1&nbsp;iotap Channel 6&nbsp;BSSId XX:XX:XX:XX:XX:XX in mode 11n as tasmota_F2D2A8-4776...</div><div class="cmdresp">[7][1.755][2.652]00:00:01.754&nbsp;WIF: Connected</div><div class="cmdresp">[8][0.251][2.904]00:00:02.006&nbsp;mDN: Initialized</div><div class="cmdresp">[9][0.004][2.908]00:00:02.009&nbsp;HTP: Web server active on tasmota_F2D2A8-4776.local with IP address 10.0.0.223</div><div class="cmdresp"> {f}{a}{s}{t}{s}{e}{n}{s}{o}{r}{ }{3}{\n}</div><div class="cmdresp">[10][0.038][2.946]00:00:02.048&nbsp;CMD: fastsensor 3</div><div class="cmdresp">[11][0.005][2.952]00:00:02.053&nbsp;RSL: stat/tasmota_F2D2A8/RESULT = {&quot;fastsensor&quot;:3}</div><div class="cmdresp">[12][0.125][3.076]18:54:17.002&nbsp;iGC: broadcast: IGORCONF:18FE34F2D2A8:0</div><div class="cmdresp">[13][0.271][3.348]18:54:17.272&nbsp;RSL: tele/tasmota_F2D2A8/SENSOR = {&quot;Time&quot;:&quot;2021-04-18T18:54:17&quot;,&quot;ANALOG&quot;:{&quot;A0&quot;:78}}</div><div class="cmdresp">[14][0.300][3.649]18:54:17.573&nbsp;RSL: tele/tasmota_F2D2A8/SENSOR = {&quot;Time&quot;:&quot;2021-04-18T18:54:17&quot;,&quot;ANALOG&quot;:{&quot;A0&quot;:79}}</div><div class="cmdresp">[15][0.329][3.978]18:54:18.080&nbsp;RSL: tele/tasmota_F2D2A8/SENSOR = {&quot;Time&quot;:&quot;2021-04-18T18:54:18&quot;,&quot;ANALOG&quot;:{&quot;A0&quot;:77}}</div><div class="cmdresp">[16][1.003][4.982]18:54:19.083&nbsp;mDN: Query done. MQTT services found 0</div><div class="cmdresp">[17][0.004][4.986]18:54:19.084&nbsp;MQT: Attempting connection...</div></p>
+<p>
+Send a&nbsp;command to ESP8266&nbsp;running Tasmota, on /dev/ttyUSB1&nbsp;port, run for at most 2&nbsp;seconds, send the&nbsp;input on 15th line of output, full timestamping,
+show timestamped bootloader data and count its lines
+<div class="cmd">echo fastsensor 3|./sercat /dev/ttyUSB1&nbsp;-ns 2&nbsp;-sl 15&nbsp;-t 7&nbsp;-espboott</div><div class="cmdresp">*** setting DTR to LOW ***</div><div class="cmdresp"> *** setting RTS to LOW ***</div><div class="cmdresp"> *** device speed is 76800&nbsp;bps ***</div><div class="cmdresp">[1][0.014][0.014]</div><div class="cmdresp">[2][0.001][0.016] ets Jan  8&nbsp;2013,rst cause:2, boot mode:(3,6)</div><div class="cmdresp">[3][0.005][0.021]</div><div class="cmdresp">[4][0.001][0.023]load 0x4010f000, len 3584, room 16</div><div class="cmdresp">[5][0.008][0.031]tail 0</div><div class="cmdresp">[6][0.001][0.032]chksum 0xb0</div><div class="cmdresp">[7][0.002][0.035]csum 0xb0</div><div class="cmdresp">[8][0.001][0.036]v3969889e</div><div class="cmdresp">[9][0.001][0.038]~ld</div><div class="cmdresp"> *** bootloader end detected ***</div><div class="cmdresp"> *** device speed is 115200&nbsp;bps ***</div><div class="cmdresp">[10][0.220][0.258]</div><div class="cmdresp">[11][0.007][0.266]00:00:00.009&nbsp;UFS: FlashFS mounted with 1904&nbsp;kB free</div><div class="cmdresp">[12][0.053][0.319]00:00:00.062&nbsp;CFG: Loaded from File, Count 190</div><div class="cmdresp">[13][0.005][0.324]00:00:00.067&nbsp;QPC: Count 1</div><div class="cmdresp">[14][0.009][0.333]00:00:00.076&nbsp;Project tasmota Tasmota Version 9.3.1.2(shad)-2_7_4_9(2021-04-17T02:35:34)</div><div class="cmdresp"> {f}{a}{s}{t}{s}{e}{n}{s}{o}{r}{ }{3}{\n}</div><div class="cmdresp">[15][0.045][0.379]00:00:00.123&nbsp;CMD: fastsensor 3</div><div class="cmdresp">[16][0.005][0.385]00:00:00.128&nbsp;RSL: stat/tasmota_F2D2A8/RESULT = {&quot;fastsensor&quot;:3}</div><div class="cmdresp">[17][0.524][0.909]00:00:00.650&nbsp;WIF: Connecting to AP1&nbsp;apiot Channel 6&nbsp;BSSId XX:XX:XX:XX:XX:XX in mode 11n as tasmota_F2D2A8-4776...</div></p>
+<p>
+Send a&nbsp;command to ESP8266&nbsp;running Tasmota, on /dev/ttyUSB1&nbsp;port, run for at most 2&nbsp;seconds, send the&nbsp;input on 15th line of output (which doesn't happen), full timestamping, show bootloader
+<div class="cmd">echo fastsensor 3|./sercat /dev/ttyUSB1&nbsp;-ns 2&nbsp;-sl 15&nbsp;-t 7&nbsp;-espboot</div><div class="cmdresp">*** setting DTR to LOW ***</div><div class="cmdresp"> *** setting RTS to LOW ***</div><div class="cmdresp"> *** device speed is 76800&nbsp;bps ***</div></p>
+<div class="cmdresp"> ets Jan  8&nbsp;2013,rst cause:2, boot mode:(3,6)</div><div class="cmdresp">load 0x4010f000, len 3584, room 16</div><div class="cmdresp">tail 0</div><div class="cmdresp">chksum 0xb0</div><div class="cmdresp">csum 0xb0</div><div class="cmdresp">v3969889e</div><div class="cmdresp">~ld</div><div class="cmdresp"> *** bootloader end detected ***</div><div class="cmdresp"> *** device speed is 115200&nbsp;bps ***</div><div class="cmdresp">[1][0.221][0.259]</div><div class="cmdresp">[2][0.008][0.268]00:00:00.009&nbsp;UFS: FlashFS mounted with 1904&nbsp;kB free</div><div class="cmdresp">[3][0.052][0.321]00:00:00.063&nbsp;CFG: Loaded from File, Count 191</div><div class="cmdresp">[4][0.006][0.328]00:00:00.068&nbsp;QPC: Count 1</div><div class="cmdresp">[5][0.007][0.336]00:00:00.077&nbsp;Project tasmota Tasmota Version 9.3.1.2(shad)-2_7_4_9(2021-04-17T02:35:34)</div><div class="cmdresp">[6][0.589][0.925]00:00:00.666&nbsp;WIF: Connecting to AP1&nbsp;apiot Channel 6&nbsp;BSSId XX:XX:XX:XX:XX:XX in mode 11n as tasmota_F2D2A8-4776...</div><hr /><a name="Download"></a><h2>Download
+</h2>
+<p>
+Sources:
+<ul><li> <a class="F" href="sercat.c" title="local file">sercat.c</a> - main source itself
+</li><li> <a class="F" href="Makefile" title="local file">Makefile</a> - compiling
+</li></ul></p>
+<p>
+Binaries (may not run on earlier or later systems, due to .so dependencies):
+<ul><li> <a class="F" href="sercat" title="local file">sercat</a> - binary for x86&nbsp;linux
+</li><li> <a class="F" href="sercat-raspi" title="local file">sercat-raspi</a> - binary for raspberry pi
+</li></ul></p>
+<hr /><a name="TODO"></a><h2>TODO
+</h2>
+<ul><li> Ctrl-R, Ctrl-I for manual reset pulses
+</li><li> Canonical/noncanonical console input modes
+</li><li> Better error messages
+</li><li> World peace
+</li><li> Get laid
+</li><li> Not necessarily in this order
+</li></ul><!-- feedback -->
+<!-- /feedback -->
+</body>
+</html>
