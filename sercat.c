@@ -267,6 +267,7 @@ void printhexbuf(char*s,int n,int filter,int nohex){
          llinelen=0;
       }
     }
+    fflush(stdout);
 }
 
 #define fd_stdin 0
